@@ -1,7 +1,7 @@
 const express = require("express");
 const { check } = require("express-validator");
 const authController = require("../controllers/authController");
-const authenticate = require("../middlewares/authMiddleware");
+const {authenticate} = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
@@ -36,8 +36,14 @@ router.post(
   authController.login
 );
 
-router.get("/customerDashboard", authenticate("customer"), (req, res) => res.render("customer/customerDashboard", { title: "Customer Dashboard" }));
-router.get("/adminDashboard", authenticate("admin_sales"), (req, res) => res.render("admin/adminDashboard", { title: "Admin Dashboard" }));
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/auth/login");
+});
+
+
+router.get("/customerDashboard", authenticate("customer","car_owner"), (req, res) => res.render("customer/customerDashboard", { title: "Customer Dashboard" }));
+router.get("/adminDashboard", authenticate("admin_sales","admin_mechanic"), (req, res) => res.render("admin/adminDasboard", { title: "Admin Dashboard" }));
 router.get("/superAdminDashboard", authenticate("super_admin"), (req, res) => res.render("superadmin/superAdminDashboard", { title: "Super Admin Dashboard" }));
 
 module.exports = router;

@@ -1,0 +1,43 @@
+<div class="container mt-5">
+  <h1>Create User</h1>
+  <% if (errors.length > 0) { %>
+    <div class="alert alert-danger">
+      <ul>
+        <% errors.forEach(error => { %>
+          <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+    </div>
+  <% } %>
+  
+  <% if (typeof success !== "undefined") { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
+
+  <form action="/superadmin/createUser" method="POST">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="<%= oldInput.name || '' %>" required>
+    </div>
+    <div class="mb-3">
+      <label for="mobile" class="form-label">Mobile</label>
+      <input type="text" class="form-control" id="mobile" name="mobile" value="<%= oldInput.mobile || '' %>" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" value="<%= oldInput.email || '' %>" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <div class="mb-3">
+      <label for="role" class="form-label">Role</label>
+      <select class="form-select" id="role" name="role" required>
+        <option value="admin_sales" <%= oldInput.role === "admin_sales" ? "selected" : "" %>>Admin Sales</option>
+        <option value="admin_mechanic" <%= oldInput.role === "admin_mechanic" ? "selected" : "" %>>Admin Sales</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Create User</button>
+  </form>
+</div>
