@@ -29,13 +29,27 @@
     </div>
     <div class="mb-3">
       <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" name="password" required>
+        <div class="input-group">
+            <input type="password" class="form-control" id="password" name="password">
+            <span class="input-group-text">
+                <i id="password-eye" class="bi bi-eye-slash"></i>
+            </span>
+        </div>
+    </div>
+    <div class="mb-3">
+      <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <div class="input-group">
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+            <span class="input-group-text">
+                <i id="confirmPassword-eye" class="bi bi-eye-slash"></i>
+            </span>
+        </div>
     </div>
     <div class="mb-3">
       <label for="role" class="form-label">Role</label>
       <select class="form-select" id="role" name="role" required>
         <option value="admin_sales" <%= oldInput.role === "admin_sales" ? "selected" : "" %>>Admin Sales</option>
-        <option value="admin_mechanic" <%= oldInput.role === "admin_mechanic" ? "selected" : "" %>>Admin Sales</option>
+        <option value="admin_mechanic" <%= oldInput.role === "admin_mechanic" ? "selected" : "" %>>Admin mechanic</option>
       </select>
     </div>
     <button type="submit" class="btn btn-primary">Create User</button>

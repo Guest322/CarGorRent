@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator');
 const { createUser, getUserByEmail } = require('../models/userModel');
 
 const register = async (req, res) => {
-    const { name, mobile, email, password } = req.body;
+    const { name, mobile, email, password, passwordConfirm } = req.body;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -16,7 +16,9 @@ const register = async (req, res) => {
         await createUser(name, mobile, email, hashedPassword);
         res.redirect('/auth/login');
     } catch (error) {
-        res.render('register', { title: "Register", errors: [{ msg: 'Server error.' }], oldInput: req.body });
+        res.render('register', { title: "Register", errors: [{ msg: 'Server error' }], oldInput: req.body });
+        console.log(error);
+        
     }
 };
 

@@ -20,6 +20,8 @@ router.post(
       .isEmail().withMessage("Email Wajib Diisi."),
     check("password")
       .isLength({ min: 6 }).withMessage("Password Harus Setidaknya Memiliki 6 Karakter"),
+    check("confirmPassword")
+      .custom((value, { req }) => value === req.body.password).withMessage("Passwords do not match.")
   ],
   authController.register
 );
