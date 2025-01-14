@@ -1,0 +1,119 @@
+<style>
+    .table {
+        margin-top: 1.5rem; /* Add spacing above the table */
+    }
+
+    .table thead th {
+        background-color: #0d6efd; /* Bootstrap primary color for header */
+        color: white; /* White text for header */
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa; /* Light gray background on hover */
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem; /* Padding for status badges */
+        border-radius: 20px; /* Rounded corners */
+        font-size: 0.9rem; /* Smaller font size */
+        font-weight: bold; /* Bold text */
+    }
+
+    .status-badge.Processing {
+        background-color: #ffc107; /* Yellow for Processing */
+        color: #000; /* Black text */
+    }
+
+    .status-badge.Approve {
+        background-color: #198754; /* Green for Approve */
+        color: #fff; /* White text */
+    }
+
+    .status-badge.Deny {
+        background-color: #dc3545; /* Red for Deny */
+        color: #fff; /* White text */
+    }
+
+    .status-badge.Finish {
+        background-color: #6c757d; /* Gray for Finish */
+        color: #fff; /* White text */
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #0d6efd; /* Bootstrap primary color for active page */
+        border-color: #0d6efd;
+        color: #f8f9fa;
+    }
+
+    .pagination .page-link {
+        color: #0d6efd; /* Bootstrap primary color for pagination links */
+    }
+
+    .pagination .page-link:hover {
+        background-color: #f8f9fa; /* Light gray background on hover */
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Your Orders</h2>
+
+    <!-- Status Filter Buttons -->
+    <div class="d-flex justify-content-center mb-4">
+        <a href="/orders/viewOrder?status=Processing" class="btn btn-warning mx-1">Processing</a>
+        <a href="/orders/viewOrder?status=Approve" class="btn btn-success mx-1">Approve</a>
+        <a href="/orders/viewOrder?status=Deny" class="btn btn-danger mx-1">Deny</a>
+        <a href="/orders/viewOrder?status=Finish" class="btn btn-secondary mx-1">Finish</a>
+        <a href="/orders/viewOrder" class="btn btn-dark mx-1">All</a> <!-- Show all orders -->
+    </div>
+
+    <!-- Orders Table -->
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Order ID</th>
+                <th>Car Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <td><%= order.order_id %></td>
+                    <td><%= order.name %></td>
+                    <td><%= order.date_start %></td>
+                    <td><%= order.date_end %></td>
+                    <td><%= new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(order.total_price) %></td>
+                    <td>
+                        <span class="status-badge <%= order.status %>"><%= order.status %></span>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>        
+    </table>
+
+    <!-- Pagination Controls -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <% if (currentPage > 1) { %>
+                <li class="page-item">
+                    <a class="page-link" href="/orders/viewOrder?page=<%= currentPage - 1 %>">Previous</a>
+                </li>
+            <% } %>
+
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                    <a class="page-link" href="/orders/viewOrder?page=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+                <li class="page-item">
+                    <a class="page-link" href="/orders/viewOrder?page=<%= currentPage + 1 %>">Next</a>
+                </li>
+            <% } %>
+        </ul>
+    </nav>
+</div>

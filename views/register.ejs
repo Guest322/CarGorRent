@@ -1,47 +1,78 @@
-<% if (errors.length > 0) { %>
-    <div class="alert alert-danger">
-        <ul>
-            <% errors.forEach(error => { %>
-                <li><%= error.msg %></li>
-            <% }) %>
-        </ul>
-    </div>
-<% } %>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">Register</h2>
 
-<form action="/auth/register" method="POST">
-    <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" name="name" value="<%= oldInput.name || '' %>">
-    </div>
-    <div class="mb-3">
-        <label for="mobile" class="form-label">Mobile</label>
-        <input type="text" class="form-control" id="mobile" name="mobile" value="<%= oldInput.mobile || '' %>">
-    </div>
-    <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" value="<%= oldInput.email || '' %>">
-    </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <div class="input-group">
-            <input type="password" class="form-control" id="password" name="password">
-            <span class="input-group-text">
-                <i id="password-eye" class="bi bi-eye-slash"></i>
-            </span>
+                    <!-- Display validation errors -->
+                    <% if (errors.length > 0) { %>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <% errors.forEach(error => { %>
+                                    <li><%= error.msg %></li>
+                                <% }) %>
+                            </ul>
+                        </div>
+                    <% } %>
+
+                    <!-- Registration Form -->
+                    <form action="/auth/register" method="POST">
+                        <!-- Name Field -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= oldInput.name || '' %>" required>
+                        </div>
+
+                        <!-- Mobile Field -->
+                        <div class="mb-3">
+                            <label for="mobile" class="form-label">Mobile</label>
+                            <input type="text" class="form-control" id="mobile" name="mobile" value="<%= oldInput.mobile || '' %>" required>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= oldInput.email || '' %>" required>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <span class="input-group-text">
+                                    <i id="password-eye" class="bi bi-eye-slash"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password Field -->
+                        <div class="mb-4">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                <span class="input-group-text">
+                                    <i id="confirmPassword-eye" class="bi bi-eye-slash"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Link to Login Page -->
+                        <p class="text-center mb-4">
+                            Sudah punya akun?
+                            <a class="text-primary text-decoration-none" href="/auth/login">Masuk disini</a>
+                        </p>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="mb-3">
-        <label for="confirmPassword" class="form-label">Confirm Password</label>
-        <div class="input-group">
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-            <span class="input-group-text">
-                <i id="confirmPassword-eye" class="bi bi-eye-slash"></i>
-            </span>
-        </div>
-    </div>
-    <p class="text-center">
-        Sudah punya akun?
-        <a class="text-primary" href="/auth/login">Masuk disini</a>
-    </p>
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+</div>
+
+<script src="/js/passwordToggle.js"></script>

@@ -1,0 +1,200 @@
+<style>
+    .fixed-height-image {
+        height: 200px; /* Default height */
+    }
+
+    @media (max-width: 768px) {
+        .fixed-height-image {
+            height: 150px; /* Adjust height for smaller screens */
+        }
+    }
+
+    @media (max-width: 576px) {
+        .fixed-height-image {
+            height: 100px; /* Adjust height for mobile screens */
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-center"><%= car.name %> - Details</h1>
+    <div class="row mt-4">
+        <!-- Car Image and Summary -->
+        <div class="col-md-6">
+            <img src="/img/car/<%= car.main_image %>" alt="<%= car.name %>" class="img-fluid rounded">
+            <h3 class="mt-3">Price per Day:<%= new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(car.price_perday) %></h3>
+        </div>
+
+        <!-- Features -->
+        <div class="col-md-6">
+            <h4>Features</h4>
+            <ul class="list-group">
+                <% for (const [key, value] of Object.entries(car.feature)) { %>
+                    <li class="list-group-item">
+                        <input type="checkbox" disabled <%= value ? 'checked' : '' %> />
+                        <%= key %>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Condition -->
+    <!-- Condition Section -->
+    <div class="mt-5">
+        <h4>Condition</h4>
+        <div class="row">
+            <% for (const [key, value] of Object.entries(car.condition)) { %>
+                <% if (key !== 'date') { %> <!-- Exclude the date field -->
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 d-flex flex-column"> <!-- Ensure cards have the same height -->
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><%= key %></h5>
+                                <p class="card-text">
+                                    Level: 
+                                    <span class="badge <%= value.level === 'Excellence' ? 'bg-dark text-white' : value.level === 'Good' ? 'bg-success text-white' : 'bg-danger text-white' %>">
+                                        <%= value.level %>
+                                    </span>
+                                </p>
+                                <p class="card-text"><%= value.description %></p>
+                                <div class="mt-auto"> <!-- Push the image to the bottom -->
+                                    <a href="/img/car/<%= value.image %>" target="_blank">
+                                        <img src="/img/car/<%= value.image %>" alt="<%= key %> image" class="img-fluid w-100 fixed-height-image object-fit-cover">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Display validation errors -->
+    <!-- <% //if (errors && errors.length > 0) { %>
+        <div class="alert alert-danger">
+            <ul>
+                <% //errors.forEach(error => { %>
+                    <li><%= //error.msg %></li>
+                <% //}) %>
+            </ul>
+        </div>
+    <% //} %> -->
+
+    <!-- Order Form -->
+    <form id="orderForm" action="/orders/process" method="POST" enctype="multipart/form-data" class="mt-5">
+        <input type="hidden" name="carId" value="<%= car.car_id %>">
+
+        <div class="mb-3">
+            <label for="dateStart" class="form-label">Start Date</label>
+            <input type="date" name="dateStart" id="dateStart" class="form-control" value="<%= car.dateStart %>" required>
+        </div>
+        <div class="mb-3">
+            <label for="dateEnd" class="form-label">End Date</label>
+            <input type="date" name="dateEnd" id="dateEnd" class="form-control" value="<%= car.dateEnd %>" required>
+        </div>
+
+        <!-- Options -->
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="driver" id="driver" class="form-check-input">
+            <label for="driver" class="form-check-label">Add Driver</label>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="fuel" id="fuel" class="form-check-input">
+            <label for="fuel" class="form-check-label">Add Fuel</label>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="eTol" id="eTol" class="form-check-input">
+            <label for="eTol" class="form-check-label">Add e-Tol</label>
+        </div>
+
+        <!-- Book Now Button to Trigger Modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentModal" onclick="calculatePrice()">
+            Book Now
+        </button>
+
+        <!-- Documents Modal -->
+        <div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="documentModalLabel">Upload Documents</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Total Price: <span id="totalPrice">0</span></h5>
+                        <h5>Transfer Fee (10%): <span id="transferFee">0</span></h5>
+                        
+                        <!-- Documents Form -->
+                        <div class="mb-3">
+                            <label for="ktp" class="form-label">KTP</label>
+                            <input type="file" name="ktp" id="ktp" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kk" class="form-label">KK</label>
+                            <input type="file" name="kk" id="kk" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="simA" class="form-label">SIM A</label>
+                            <input type="file" name="simA" id="simA" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="transfer" class="form-label">Transfer Receipt</label>
+                            <input type="file" name="transfer" id="transfer" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function calculatePrice() {
+        const pricePerDay = <%= car.price_perday %>;
+        const startDateInput = document.getElementById("dateStart").value;
+        const endDateInput = document.getElementById("dateEnd").value;
+
+        // Check if dates are valid before calculating
+        if (!startDateInput || !endDateInput) {
+            document.getElementById("totalPrice").innerText = "Rp 0";
+            document.getElementById("transferFee").innerText = "Rp 0";
+            return;  // Exit function if dates are not valid
+        }
+
+        const startDate = new Date(startDateInput);
+        const endDate = new Date(endDateInput);
+        const diffTime = endDate - startDate;
+        
+        if (diffTime <= 0) {  // If end date is before start date
+            document.getElementById("totalPrice").innerText = "Rp 0";
+            document.getElementById("transferFee").innerText = "Rp 0";
+            return;  // Exit function if date range is invalid
+        }
+
+        const diffDays = diffTime / (1000 * 3600 * 24);
+        
+        let totalPrice = pricePerDay * diffDays;
+        const driver = document.getElementById("driver").checked;
+        const fuel = document.getElementById("fuel").checked;
+        const eTol = document.getElementById("eTol").checked;
+        
+        if (driver) totalPrice += 250000;
+        if (fuel) totalPrice += 200000;
+        if (eTol) totalPrice += 100000;
+        
+        const transferFee = totalPrice * 0.10;
+        
+        // Format the total price as IDR currency   
+        const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalPrice);
+        const formattedFee = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(transferFee);
+        
+        document.getElementById("totalPrice").innerText = formattedPrice;
+        document.getElementById("transferFee").innerText = formattedFee;
+    }
+</script>
+

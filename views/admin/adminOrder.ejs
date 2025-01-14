@@ -1,0 +1,79 @@
+<div class="container mt-5">
+    <h1>Admin - Order Management</h1>
+
+    <!-- Search Form -->
+    <form method="get" action="/admin/orders" class="form-inline mb-4">
+        <input type="text" name="search" class="form-control" placeholder="Search by Order ID" value="<%= search %>">
+        <button type="submit" class="btn btn-primary ml-2">Search</button>
+    </form>
+
+    <!-- Orders Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>User Name</th>
+                <th>Car Registration Number</th>
+                <th>KTP</th>
+                <th>KK</th>
+                <th>SIM A</th>
+                <th>Transfer</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (orders.length > 0) { %>
+                <% orders.forEach(order => { %>
+                    <tr>
+                        <td><%= order.order_id %></td>
+                        <td><%= order.user_name %></td>
+                        <td><%= order.registration_number %></td>
+                        <td><img src="/img/documents/<%= order.ktp %>" alt="KTP" width="50"></td>
+                        <td><img src="/img/documents/<%= order.kk %>" alt="KK" width="50"></td>
+                        <td><img src="/img/documents/<%= order.sim_a %>" alt="SIM A" width="50"></td>
+                        <td><img src="/img/documents/<%= order.transfer %>" alt="Transfer" width="50"></td>
+                        <td><%= order.status %></td>
+                        <td>
+                            <!-- Approve Button -->
+                            <a href="/admin/orders/approve/<%= order.order_id %>" class="btn btn-success btn-sm">Approve</a>
+                            <!-- Deny Button -->
+                            <a href="/admin/orders/deny/<%= order.order_id %>" class="btn btn-danger btn-sm">Deny</a>
+                            <!-- Detail Button (opens modal) -->
+                            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#orderModal<%= order.order_id %>">Details</button>
+
+                            <!-- Modal for Details -->
+                            <div class="modal fade" id="orderModal<%= order.order_id %>" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel<%= order.order_id %>" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="orderModalLabel<%= order.order_id %>">Order Details: <%= order.order_id %></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p><strong>Customer Name:</strong> <%= order.user_name %></p>
+                                            <p><strong>Car Registration Number:</strong> <%= order.registration_number %></p>
+                                            <p><strong>KTP:</strong> <img src="/img/documents/<%= order.ktp %>" alt="KTP" width="200"></p>
+                                            <p><strong>KK:</strong> <img src="/img/documents/<%= order.kk %>" alt="KK" width="200"></p>
+                                            <p><strong>SIM A:</strong> <img src="/img/documents/<%= order.sim_a %>" alt="SIM A" width="200"></p>
+                                            <p><strong>Transfer:</strong> <img src="/img/documents/<%= order.transfer %>" alt="Transfer" width="200"></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="9" class="text-center">No orders found.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>

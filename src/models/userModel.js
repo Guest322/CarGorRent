@@ -29,8 +29,37 @@ const createUser = async (name, mobile, email, hashedPassword) => {
 
 // Get user by email
 const getUserByEmail = async (email) => {
-    const result = await pool.query('SELECT * FROM user_login WHERE email = $1', [email]);
+    const qw = `
+        SELECT 
+            ul.login_id, 
+            ul.email,
+            ul.password, 
+            ul.role, 
+            ud.status
+        FROM 
+            user_login ul
+        JOIN 
+            user_data ud
+        ON 
+            ul.user_id = ud.user_id
+        WHERE 
+            ul.email = '${email}'
+    `;
+    const result = await pool.query(qw);
     return result.rows[0];
 };
 
-module.exports = { createUser, getUserByEmail };
+const findUserByEmail = async (email) => {
+    try {
+      const result = await pool.query(
+        "SELECT * FROM user_login WHERE email = $1",
+        [email]
+      );
+      return result.rows[0]; // Return the user if found, otherwise null
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+module.exports = { createUser, getUserByEmail, findUserByEmail };

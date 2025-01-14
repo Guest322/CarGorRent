@@ -1,0 +1,68 @@
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Car Management</h1>
+
+    <!-- Filter by Registration Number -->
+    <form action="/admin/cars" method="GET" class="mb-3">
+      <div class="input-group">
+        <input type="text" class="form-control" name="search" placeholder="Search by Registration Number" value="<%= search || '' %>">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </form>
+
+    <!-- Table for Cars -->
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Car Name</th>
+          <th>Brand</th>
+          <th>Registration Number</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cars.forEach(car => { %>
+          <tr>
+            <td><%= car.order_id %></td>
+            <td><%= car.car_name %></td>
+            <td><%= car.brand %></td>
+            <td><%= car.registration_number %></td>
+            <td><%= car.car_status %></td>
+            <td>
+              <!-- Detail Button -->
+              <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal<%= car.order_id %>">Details</button>
+              <!-- Lending Button -->
+              <a href="/admin/cars/lending/<%= car.order_id %>" class="btn btn-warning">Lending</a>
+              <!-- Back Button -->
+              <a href="/admin/cars/back/<%= car.order_id %>" class="btn btn-success">Back</a>
+            </td>
+          </tr>
+
+          <!-- Detail Modal -->
+          <div class="modal fade" id="detailModal<%= car.order_id %>" tabindex="-1" aria-labelledby="detailModalLabel<%= car.order_id %>" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="detailModalLabel<%= car.order_id %>">Car Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <img src="/img/car/<%= car.main_image %>" class="img-fluid mb-3" alt="Car Image">
+                  <p><strong>Brand:</strong> <%= car.brand %></p>
+                  <p><strong>Name:</strong> <%= car.car_name %></p>
+                  <p><strong>Registration Number:</strong> <%= car.registration_number %></p>
+                  <p><strong>User Name:</strong> <%= car.user_name %></p>
+                  <p><strong>Mobile:</strong> <%= car.mobile %></p>
+                  <p><strong>Email:</strong> <%= car.email %></p>
+                  <p><strong>Start Date:</strong> <%= car.date_start %></p>
+                  <p><strong>End Date:</strong> <%= car.date_end %></p>
+                  <p><strong>Total Price:</strong> <%= new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(car.total_price) %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>

@@ -9,49 +9,163 @@
       </ul>
     </div>
   <% } %>
-  
-  <% if (typeof success !== "undefined") { %>
-    <div class="alert alert-success"><%= success %></div>
-  <% } %>
+  <!-- Create User Button to Open Modal -->
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">Create User</button>
 
-  <form action="/superadmin/createUser" method="POST">
-    <div class="mb-3">
-      <label for="name" class="form-label">Name</label>
-      <input type="text" class="form-control" id="name" name="name" value="<%= oldInput.name || '' %>" required>
+  <form action="/superadmin/createUser" method="GET" class="mb-3">
+    <div class="row">
+      <!-- Filter by User ID -->
+      <div class="col-md-3">
+        <label for="userIdFilter" class="form-label">Filter by User ID</label>
+        <input type="text" class="form-control" id="userIdFilter" name="user_id" value="<%= filters.user_id || '' %>">
+      </div>
+  
+      <!-- Filter by Name -->
+      <div class="col-md-3">
+        <label for="nameFilter" class="form-label">Filter by Name</label>
+        <input type="text" class="form-control" id="nameFilter" name="name" value="<%= filters.name || '' %>">
+      </div>
+  
+      <!-- Filter by Email -->
+      <div class="col-md-3">
+        <label for="emailFilter" class="form-label">Filter by Email</label>
+        <input type="text" class="form-control" id="emailFilter" name="email" value="<%= filters.email || '' %>">
+      </div>
+  
+      <!-- Filter by Status -->
+      <div class="col-md-3">
+        <label for="statusFilter" class="form-label">Filter by Status</label>
+        <select class="form-select" id="statusFilter" name="status">
+          <option value="">All</option>
+          <option value="Available" <%= filters.status === "Available" ? "selected" : "" %>>Available</option>
+          <option value="Terminated" <%= filters.status === "Terminated" ? "selected" : "" %>>Terminated</option>
+        </select>
+      </div>
+  
+      <!-- Filter by Role -->
+      <div class="col-md-3">
+        <label for="roleFilter" class="form-label">Filter by Role</label>
+        <select class="form-select" id="roleFilter" name="role">
+          <option value="">All</option>
+          <option value="admin_sales" <%= filters.role === "admin_sales" ? "selected" : "" %>>Admin Sales</option>
+          <option value="admin_mechanic" <%= filters.role === "admin_mechanic" ? "selected" : "" %>>Admin Mechanic</option>
+          <option value="super_admin" <%= filters.role === "super_admin" ? "selected" : "" %>>Super Admin</option>
+        </select>
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="col-md-3 align-self-end">
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+      </div>
     </div>
-    <div class="mb-3">
-      <label for="mobile" class="form-label">Mobile</label>
-      <input type="text" class="form-control" id="mobile" name="mobile" value="<%= oldInput.mobile || '' %>" required>
-    </div>
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" value="<%= oldInput.email || '' %>" required>
-    </div>
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-        <div class="input-group">
-            <input type="password" class="form-control" id="password" name="password">
-            <span class="input-group-text">
-                <i id="password-eye" class="bi bi-eye-slash"></i>
-            </span>
-        </div>
-    </div>
-    <div class="mb-3">
-      <label for="confirmPassword" class="form-label">Confirm Password</label>
-        <div class="input-group">
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-            <span class="input-group-text">
-                <i id="confirmPassword-eye" class="bi bi-eye-slash"></i>
-            </span>
-        </div>
-    </div>
-    <div class="mb-3">
-      <label for="role" class="form-label">Role</label>
-      <select class="form-select" id="role" name="role" required>
-        <option value="admin_sales" <%= oldInput.role === "admin_sales" ? "selected" : "" %>>Admin Sales</option>
-        <option value="admin_mechanic" <%= oldInput.role === "admin_mechanic" ? "selected" : "" %>>Admin mechanic</option>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Create User</button>
   </form>
+  
+  <!-- Modal for Create User -->
+  <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createUserModalLabel">Create User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/superadmin/createUser" method="POST">
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name" name="name" value="<%= oldInput.name || '' %>" required>
+            </div>
+            <div class="mb-3">
+              <label for="mobile" class="form-label">Mobile</label>
+              <input type="text" class="form-control" id="mobile" name="mobile" value="<%= oldInput.mobile || '' %>" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" value="<%= oldInput.email || '' %>" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <div class="mb-3">
+              <label for="role" class="form-label">Role</label>
+              <select class="form-select" id="role" name="role" required>
+                <option value="admin_sales" <%= oldInput.role === "admin_sales" ? "selected" : "" %>>Admin Sales</option>
+                <option value="admin_mechanic" <%= oldInput.role === "admin_mechanic" ? "selected" : "" %>>Admin Mechanic</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Create User</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table to Show Admin Users -->
+  <h2 class="mt-5">Admin Users</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(user => { %>
+        <tr>
+          <td><%= user.user_id %></td>
+          <td><%= user.name %></td>
+          <td><%= user.email %></td>
+          <td><%= user.role %></td>
+          <td><%= user.status %></td>
+          <td>
+            <!-- Button to Open User Detail Modal -->
+            <!-- <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#userDetailModal<%= user.user_id %>">Details</button> -->
+            
+            <!-- Change Status Button -->
+              <!-- Available Button -->
+              <form action="/superadmin/changeStatus" method="POST" style="display:inline-block;">
+                <input type="hidden" name="user_id" value="<%= user.user_id %>">
+                <input type="hidden" name="status" value="Available">
+                <button type="submit" class="btn btn-success">Available</button>
+              </form>
+            
+              <!-- Terminated Button -->
+              <form action="/superadmin/changeStatus" method="POST" style="display:inline-block;">
+                <input type="hidden" name="user_id" value="<%= user.user_id %>">
+                <input type="hidden" name="status" value="Terminated">
+                <button type="submit" class="btn btn-danger">Terminated</button>
+              </form>
+          </td>
+        </tr>
+
+        <!-- Modal for User Details -->
+        <!-- <div class="modal fade" id="userDetailModal<%= //user.user_id %>" tabindex="-1" aria-labelledby="userDetailModalLabel<%= user.user_id %>" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="userDetailModalLabel<%= //user.user_id %>">User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p><strong>Name:</strong> <%= //user.name %></p>
+                <p><strong>Email:</strong> <%= //user.email %></p>
+                <p><strong>Role:</strong> <%= //user.role %></p>
+                <p><strong>Status:</strong> <%= //user.status %></p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      <% }) %>
+    </tbody>
+  </table>
 </div>
+
+<script src="/js/passwordToggle.js"></script>

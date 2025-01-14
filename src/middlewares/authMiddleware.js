@@ -12,6 +12,7 @@ const setUser = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     res.locals.user = decoded; // Make user info available in views
+    req.userId = decoded.id;
   } catch (err) {
     res.locals.user = null; // Invalid or expired token
   }
@@ -32,6 +33,7 @@ const authenticate = (role) => {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       res.locals.user = decoded;
+      req.userId = decoded.id;
 
       if (role && decoded.role !== role) {
         return res.status(403).send("Access Denied");

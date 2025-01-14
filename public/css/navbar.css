@@ -1,0 +1,26 @@
+/* Style the navbar links */
+.navbar-nav .nav-item .nav-link {
+    font-size: 1rem;
+    margin: 0 10px;
+    text-transform: uppercase;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #007bff;
+}
+
+/* Style the brand name */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+/* Adjust footer styling */
+footer {
+    background-color: #f8f9fa;
+    font-size: 0.9rem;
+    color: #555;
+}

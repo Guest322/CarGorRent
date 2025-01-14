@@ -1,0 +1,121 @@
+<style>
+    .card-img-top {
+        height: 200px; /* Set a fixed height for all images */
+        object-fit: cover; /* Maintain aspect ratio and cover the container */
+        width: 100%; /* Ensure the image takes the full width of the card */
+    }
+
+    @media (max-width: 768px) {
+        .card-img-top {
+            height: 150px; /* Adjust height for smaller screens */
+        }
+    }
+
+    @media (max-width: 576px) {
+        .card-img-top {
+            height: 100px; /* Adjust height for mobile screens */
+        }
+    }
+
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.05); /* Slightly enlarge the card on hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow on hover */
+    }
+
+    .dashboard-card {
+        background-color: #f8f9fa; /* Light background for dashboard cards */
+        border: 1px solid #dee2e6; /* Subtle border */
+        border-radius: 8px; /* Rounded corners */
+        padding: 1.5rem; /* Padding inside the cards */
+        margin-bottom: 1.5rem; /* Spacing between cards */
+    }
+
+    .dashboard-card h5 {
+        font-size: 1.25rem; /* Larger font size for titles */
+        margin-bottom: 1rem; /* Spacing below titles */
+    }
+
+    .dashboard-card p {
+        font-size: 1.5rem; /* Larger font size for values */
+        font-weight: bold; /* Bold text for emphasis */
+        margin-bottom: 0; /* Remove default margin */
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4"><%= title %></h1>
+
+    <!-- Dashboard Section -->
+    <!-- <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="dashboard-card text-center">
+                <h5>Total Cars</h5>
+                <p><%= //totalCars %></p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-card text-center">
+                <h5>Available Cars</h5>
+                <p><%= //availableCars %></p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-card text-center">
+                <h5>Total Orders</h5>
+                <p><%= //totalOrders %></p>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Seat Filter Buttons -->
+    <div class="d-flex justify-content-center mb-4">
+        <form action="/search" method="get" class="d-flex flex-wrap justify-content-center gap-2">
+            <button type="submit" name="seat" value="" class="btn btn-info <%= seat === '' ? 'active' : '' %>">All Seats</button>
+            <button type="submit" name="seat" value="2 Seater" class="btn btn-info <%= seat === '2 Seater' ? 'active' : '' %>">2 Seater</button>
+            <button type="submit" name="seat" value="4 Seater" class="btn btn-info <%= seat === '4 Seater' ? 'active' : '' %>">4 Seater</button>
+            <button type="submit" name="seat" value="5 Seater" class="btn btn-info <%= seat === '5 Seater' ? 'active' : '' %>">5 Seater</button>
+            <button type="submit" name="seat" value="7 Seater" class="btn btn-info <%= seat === '7 Seater' ? 'active' : '' %>">7 Seater</button>
+            <button type="submit" name="seat" value="9 Seater" class="btn btn-info <%= seat === '9 Seater' ? 'active' : '' %>">9 Seater</button>
+        </form>
+    </div>    
+
+    <!-- Display Cars -->
+    <% if (cars.length === 0) { %>
+        <p class="text-center">No cars found for the selected seat count.</p>
+    <% } else { %>
+        <div class="row">
+            <% cars.forEach(car => { %>
+                <div class="col-md-4 mb-4 d-flex">
+                    <a href="/cars/<%= car.car_id %>" style="text-decoration: none; color: inherit;" class="w-100">
+                        <div class="card h-100 d-flex flex-column">
+                            <img src="/img/car/<%= car.main_image %>" class="card-img-top" alt="<%= car.name %>">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><%= car.brand %> <%= car.name %></h5>
+                                <p class="card-text">Price per day:<%= new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(car.price_perday) %></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+    
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4">
+        <% if (currentPage > 1) { %>
+            <a href="/search?seat=<%= seat %>&page=<%= currentPage - 1 %>" class="btn btn-secondary mx-1">Previous</a>
+        <% } %>
+    
+        <% for (let i = 1; i <= totalPages; i++) { %>
+            <a href="/search?seat=<%= seat %>&page=<%= i %>" class="btn <%= i === currentPage ? 'btn-primary' : 'btn-outline-primary' %> mx-1"><%= i %></a>
+        <% } %>
+    
+        <% if (currentPage < totalPages) { %>
+            <a href="/search?seat=<%= seat %>&page=<%= currentPage + 1 %>" class="btn btn-secondary mx-1">Next</a>
+        <% } %>
+    </div>    
+</div>
